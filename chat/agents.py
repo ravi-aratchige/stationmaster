@@ -1,9 +1,8 @@
 from providers.chat_models import GroqChatModel
-
-# from chat.contextualizers import get_hotel_information
-# from chat.contextualizers import get_experience_information
 from chat.prompts import ToolBoundAgentPromptTemplate
+from oracle.contextualizers import search_for_basic_information
 from langchain.agents import AgentExecutor, create_tool_calling_agent
+from settings import AGENT_VERBOSITY
 
 
 class ToolBoundAgentBuilder:
@@ -12,10 +11,7 @@ class ToolBoundAgentBuilder:
         model = GroqChatModel()
 
         # Build agent toolkit (contextualizers)
-        toolkit = [
-            # get_hotel_information,
-            # get_experience_information,
-        ]
+        toolkit = [search_for_basic_information]
 
         # Define agent instruction prompt
         prompt = ToolBoundAgentPromptTemplate()
@@ -31,7 +27,7 @@ class ToolBoundAgentBuilder:
         runnable_agent = AgentExecutor(
             agent=agent,
             tools=toolkit,
-            verbose=True,
+            verbose=AGENT_VERBOSITY,
         )
 
         return runnable_agent
