@@ -1,6 +1,6 @@
 # Agent settings
 
-AGENT_VERBOSITY = False
+AGENT_VERBOSITY = True
 
 # Selenium configurations
 
