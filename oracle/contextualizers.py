@@ -22,6 +22,9 @@ def search_for_basic_information(departure_station: str, arrival_station: str):
         departure_station=departure_station, arrival_station=arrival_station
     )
 
+    if trains == None:
+        return "An error occured and train data could not be fetched."
+
     # Iterate through all trains and add to string of train info
     for train in trains:
         train_information += (
