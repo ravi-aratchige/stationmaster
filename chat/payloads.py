@@ -2,9 +2,8 @@ from pydantic import BaseModel
 
 
 # User input model
-class ChatDataModel(BaseModel):
+class MessagePayload(BaseModel):
     content: str
-    userId: str
 
 
 # Make module safely exportable
