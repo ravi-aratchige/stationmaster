@@ -38,3 +38,8 @@ def search_for_basic_information(departure_station: str, arrival_station: str):
         )
 
     return train_information
+
+
+# Make module safely exportable
+if __name__ == "__main__":
+    pass

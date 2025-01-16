@@ -43,3 +43,8 @@ def set_firefox_options() -> FirefoxOptions:
     # firefox_prefs["profile.default_content_settings"] = {"images": 2}
 
     return firefox_options
+
+
+# Make module safely exportable
+if __name__ == "__main__":
+    pass

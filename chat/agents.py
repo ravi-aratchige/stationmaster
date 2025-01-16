@@ -31,3 +31,8 @@ class ToolBoundAgentBuilder:
         )
 
         return runnable_agent
+
+
+# Make module safely exportable
+if __name__ == "__main__":
+    pass
