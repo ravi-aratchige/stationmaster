@@ -20,25 +20,14 @@ def retrieve_all_trains(departure_station: str, arrival_station: str):
     # DEPARTURE SELECTION
 
     try:
-        # Locate the departure station input field
-        departure_station_input = driver.find_element(
-            By.CSS_SELECTOR, "button[data-id='drStartStation']"
-        )
+        # Locate the departure station input field and click it
+        driver.find_element(By.CSS_SELECTOR, "button[data-id='drStartStation']").click()
 
-        # Click the departure station selection dropdown button
-        departure_station_input.click()
-
-        # Locate the input field to type in the departure station name
-        departure_station_input_field = driver.find_element(
+        # Locate the departure station input field and enter the station name
+        driver.find_element(
             By.XPATH,
             "/html/body/div/main/div/div[2]/div/div/div/div/form/div[1]/div/div/div/input",
-        )
-
-        # Enter the departure station name in the input field
-        departure_station_input_field.send_keys(departure_station)
-
-        # Press the Enter key
-        departure_station_input_field.send_keys(Keys.ENTER)
+        ).send_keys(departure_station + Keys.ENTER)
 
         # Wait before proceeding (to over DOM overlapping issues)
         print(f"INFO: Waiting for {seconds_to_wait} seconds...")
@@ -53,26 +42,14 @@ def retrieve_all_trains(departure_station: str, arrival_station: str):
     # ARRIVAL SELECTION
 
     try:
+        # Locate the arrival station input field and click it
+        driver.find_element(By.CSS_SELECTOR, "button[data-id='drEndStation']").click()
 
-        # Locate the arrival station input field
-        arrival_station_input = driver.find_element(
-            By.CSS_SELECTOR, "button[data-id='drEndStation']"
-        )
-
-        # Click the arrival station selection dropdown button
-        arrival_station_input.click()
-
-        # Locate the input field to type in the departure station name
-        arrival_station_input_field = driver.find_element(
+        # Locate the arrival station input field and enter the station name
+        driver.find_element(
             By.XPATH,
             "/html/body/div/main/div/div[2]/div/div/div/div/form/div[2]/div/div/div/input",
-        )
-
-        # Enter the arrival station name in the input field
-        arrival_station_input_field.send_keys(arrival_station)
-
-        # Press the Enter key
-        arrival_station_input_field.send_keys(Keys.ENTER)
+        ).send_keys(arrival_station + Keys.ENTER)
 
         # Wait before proceeding (to over DOM overlapping issues)
         print(f"INFO: Waiting for {seconds_to_wait} seconds...")
@@ -84,13 +61,10 @@ def retrieve_all_trains(departure_station: str, arrival_station: str):
     else:
         print("INFO: Arrival station selected successfully.")
 
-    # Locate the "Search" button
-    search_btn = driver.find_element(
+    # Locate the "Search" button and click it
+    driver.find_element(
         By.XPATH, "/html/body/div/main/div/div[2]/div/div/div/div/form/button"
-    )
-
-    # Click the "Search" button
-    search_btn.click()
+    ).click()
 
     # RESULTS
 
@@ -98,17 +72,8 @@ def retrieve_all_trains(departure_station: str, arrival_station: str):
         By.XPATH, "/html/body/div/main/div[1]/div[2]/div/div/table"
     )
 
-    # List to store table headings
-    results_headings_list = []
-
     # List to store all train results
     all_available_trains = []
-
-    results_table_headings = results_table.find_elements(By.TAG_NAME, "th")
-    for heading in results_table_headings:
-        results_headings_list.append(heading.text)
-
-    print(f"All headings: {results_headings_list}")
 
     results_table_rows = results_table.find_elements(By.TAG_NAME, "tr")
     for row in results_table_rows:
@@ -150,5 +115,6 @@ def retrieve_all_trains(departure_station: str, arrival_station: str):
     return all_available_trains
 
 
+# Make module safely exportable
 if __name__ == "__main__":
     pass
