@@ -104,8 +104,9 @@ def retrieve_all_trains(departure_station: str, arrival_station: str) -> list:
             print(f"Train info: {train_info}")
             all_available_trains.append(train_info)
 
-    except:
+    except Exception as e:
         print("ERROR: Something went wrong while scraping data...")
+        print(f"The error:\n{e}")
 
         # Close the browser
         print("INFO: Closing the browser and terminating ChromiumDriver executable...")

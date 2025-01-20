@@ -42,10 +42,14 @@ class BrowserOptionsFactory:
 
         # Check whether Chrome needs to be run in headless mode
         if HEADLESS_MODE:
-            options.add_argument("--headless")
+            options.add_argument("--headless=new")
 
         options.add_argument("--no-sandbox")
         options.add_argument("--disable-dev-shm-usage")
+        options.add_argument("--window-size=1920,1080")
+
+        # NOTE
+        # Window size MUST be set when running Chrome in headless mode.
 
         chrome_prefs = {}
         options.experimental_options["prefs"] = chrome_prefs

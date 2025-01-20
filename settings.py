@@ -4,7 +4,7 @@ AGENT_VERBOSITY = True
 
 # Selenium configurations
 
-HEADLESS_MODE = False
+HEADLESS_MODE = True
 
 # Make module safely exportable
 if __name__ == "__main__":
