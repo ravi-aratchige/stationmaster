@@ -9,6 +9,18 @@ from settings import HEADLESS_MODE
 class BrowserOptionsFactory:
     @staticmethod
     def get_browser_options(browser_name: str = "chrome"):
+        """Returns options for browser, based on the browser name provided.
+
+        Args:
+            browser_name (str, optional): Name of the required browser. Defaults to "chrome".
+
+        Raises:
+            ValueError: Raised when an invalid browser name is specified.
+
+        Returns:
+            Options: Browser options for the selected browser.
+        """
+
         if browser_name.lower() == "chrome":
             return BrowserOptionsFactory.get_chrome_options()
         elif browser_name.lower() == "firefox":
