@@ -22,4 +22,6 @@ RUN pip install --upgrade pip
 
 RUN pip install -r requirements.txt
 
-CMD ["fastapi", "dev", "main.py"]
+EXPOSE 8000
+
+CMD ["fastapi", "run"]
