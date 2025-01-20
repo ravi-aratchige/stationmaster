@@ -7,7 +7,7 @@ from oracle.retrievers import retrieve_ticket_prices
 # Setup chatbot router
 router = APIRouter(
     prefix="/chat",
-    tags=["StationMaster Chat"],
+    tags=["Chat"],
 )
 
 
@@ -24,9 +24,9 @@ def test_router():
     }
 
 
-# Get response from chatbot for predetermined input
-@router.post("/get-test-response/")
-def get_test_response_from_chatbot():
+# Test chatbot response for train info between two stations
+@router.get("/test-response-train-info/", tags=["Debug"])
+def test_response_train_info():
     start_time = time.time()
     message = "Are there trains available from Ja-ela to Colombo Fort?"
     agent = ToolBoundAgentBuilder()
@@ -37,8 +37,21 @@ def get_test_response_from_chatbot():
     }
 
 
+# Test chatbot response for ticket info between two stations
+@router.get("/test-response-ticket-info/", tags=["Debug"])
+def test_response_ticket_info():
+    start_time = time.time()
+    message = "How much would a ticket from Negombo to Colombo Fort cost?"
+    agent = ToolBoundAgentBuilder()
+    response = agent.invoke({"input": message})
+    print(f"Execution time: {time.time() - start_time}")
+    return {
+        "data": response,
+    }
+
+
 # Get response from chatbot for user input
-@router.post("/get-response/")
+@router.post("/get-response/", tags=["Live"])
 def get_response_from_chatbot(input: MessagePayload):
     message = input.content
     agent = ToolBoundAgentBuilder()

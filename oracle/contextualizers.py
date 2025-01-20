@@ -1,10 +1,10 @@
-from oracle.retrievers import retrieve_all_trains
+from oracle.retrievers import retrieve_all_trains, retrieve_ticket_prices
 from langchain_core.tools import tool
 
 
 @tool
-def search_for_basic_information(departure_station: str, arrival_station: str):
-    """Search for information about trains going from a specified departure point to an arrival point.
+def get_trains_between_stations(departure_station: str, arrival_station: str) -> str:
+    """Find out which trains are available between a departure station and an arrival station.
 
     Args:
         departure_station (str): The name of the departure station
@@ -38,6 +38,40 @@ def search_for_basic_information(departure_station: str, arrival_station: str):
         )
 
     return train_information
+
+
+@tool
+def get_ticket_prices(departure_station: str, arrival_station: str) -> str:
+    """Get ticket prices for trains based on their departure and arrival stations.
+
+    Args:
+        departure_station (str): The name of the departure station
+        arrival_station (str): The name of the arrival station
+
+    Returns:
+        str: Information about ticket prices of trains between the aforementioned stations.
+    """
+
+    # String to return to LLM with ticket information
+    ticket_price_information = f"Here are the ticket prices for trains from {departure_station} to {arrival_station}:\n\n"
+
+    # Fetch ticket price information from retriever
+    ticket_prices = retrieve_ticket_prices(
+        departure_station=departure_station, arrival_station=arrival_station
+    )
+
+    if ticket_prices == None:
+        return "An error occured and ticket pricing data could not be fetched."
+
+    # Add ticket pricing data to string of ticket info
+    if "first_class" in ticket_prices:
+        ticket_price_information += f"First class: {ticket_prices["first_class"]}\n"
+    if "second_class" in ticket_prices:
+        ticket_price_information += f"Second class: {ticket_prices["second_class"]}\n"
+    if "third_class" in ticket_prices:
+        ticket_price_information += f"Third class: {ticket_prices["third_class"]}\n"
+
+    return ticket_price_information
 
 
 # Make module safely exportable

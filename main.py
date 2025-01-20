@@ -35,7 +35,7 @@ app.add_middleware(
 
 
 # Root route (to test service health)
-@app.get("/", tags=["StationMaster (Internals)"])
+@app.get("/", tags=["Internals"])
 async def root():
     return {
         "message": "StationMaster is up and running.",
