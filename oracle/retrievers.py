@@ -3,14 +3,12 @@ from selenium import webdriver
 from selenium.webdriver.common.by import By
 from utils.browser import BrowserOptionsFactory
 from selenium.webdriver.common.keys import Keys
+from selenium.webdriver.common.action_chains import ActionChains
 
 
 def retrieve_all_trains(departure_station: str, arrival_station: str) -> list:
     try:
         # ----- INITIALIZATION -----
-
-        # Set time to sleep between button clicks (to avoid DOM overlapping issues)
-        seconds_to_wait = 3
 
         # Setup the webdriver
         driver = webdriver.Chrome(
@@ -26,10 +24,7 @@ def retrieve_all_trains(departure_station: str, arrival_station: str) -> list:
         driver.find_element(By.CSS_SELECTOR, "button[data-id='drStartStation']").click()
 
         # Locate the departure station input field and enter the station name
-        driver.find_element(
-            By.XPATH,
-            "/html/body/div/main/div/div[2]/div/div/div/div/form/div[1]/div/div/div/input",
-        ).send_keys(departure_station + Keys.ENTER)
+        driver.switch_to.active_element.send_keys(departure_station + Keys.ENTER)
 
         print("INFO: Departure station selected successfully.")
 
@@ -39,24 +34,12 @@ def retrieve_all_trains(departure_station: str, arrival_station: str) -> list:
         driver.find_element(By.CSS_SELECTOR, "button[data-id='drEndStation']").click()
 
         # Locate the arrival station input field and enter the station name
-        driver.find_element(
-            By.XPATH,
-            "/html/body/div/main/div/div[2]/div/div/div/div/form/div[2]/div/div/div/input",
-        ).send_keys(arrival_station + Keys.ENTER)
-
-        # Scroll down by 500 pixels
-        driver.execute_script("window.scrollBy(0, 500)")
-
-        # Wait before proceeding (to over DOM overlapping issues)
-        print(f"INFO: Waiting for {seconds_to_wait} seconds...")
-        sleep(seconds_to_wait)
+        driver.switch_to.active_element.send_keys(arrival_station + Keys.ENTER)
 
         print("INFO: Arrival station selected successfully.")
 
         # Locate the "Search" button and click it
-        driver.find_element(
-            By.XPATH, "/html/body/div/main/div/div[2]/div/div/div/div/form/button"
-        ).click()
+        driver.find_element(By.CSS_SELECTOR, "button[type='submit']").click()
 
         # ----- RESULTS -----
 
@@ -125,9 +108,6 @@ def retrieve_ticket_prices(departure_station: str, arrival_station: str) -> dict
     try:
         # ----- INITIALIZATION -----
 
-        # Set time to sleep between button clicks (to avoid DOM overlapping issues)
-        seconds_to_wait = 3
-
         # Setup the webdriver
         driver = webdriver.Chrome(
             options=BrowserOptionsFactory.get_browser_options("chrome")
@@ -142,10 +122,7 @@ def retrieve_ticket_prices(departure_station: str, arrival_station: str) -> dict
         driver.find_element(By.CSS_SELECTOR, "button[data-id='drStartStation']").click()
 
         # Locate the departure station input field and enter the station name
-        driver.find_element(
-            By.XPATH,
-            "/html/body/div/main/div/div[2]/div/div/div/div/form/div[1]/div/div/div/input",
-        ).send_keys(departure_station + Keys.ENTER)
+        driver.switch_to.active_element.send_keys(departure_station + Keys.ENTER)
 
         print("INFO: Departure station selected successfully.")
 
@@ -155,24 +132,12 @@ def retrieve_ticket_prices(departure_station: str, arrival_station: str) -> dict
         driver.find_element(By.CSS_SELECTOR, "button[data-id='drEndStation']").click()
 
         # Locate the arrival station input field and enter the station name
-        driver.find_element(
-            By.XPATH,
-            "/html/body/div/main/div/div[2]/div/div/div/div/form/div[2]/div/div/div/input",
-        ).send_keys(arrival_station + Keys.ENTER)
-
-        # Scroll down by 500 pixels
-        driver.execute_script("window.scrollBy(0, 500)")
-
-        # Wait before proceeding (to over DOM overlapping issues)
-        print(f"INFO: Waiting for {seconds_to_wait} seconds...")
-        sleep(seconds_to_wait)
+        driver.switch_to.active_element.send_keys(arrival_station + Keys.ENTER)
 
         print("INFO: Arrival station selected successfully.")
 
         # Locate the "Search" button and click it
-        driver.find_element(
-            By.XPATH, "/html/body/div/main/div/div[2]/div/div/div/div/form/button"
-        ).click()
+        driver.find_element(By.CSS_SELECTOR, "button[type='submit']").click()
 
         # ----- RESULTS -----
 
@@ -207,19 +172,20 @@ def retrieve_ticket_prices(departure_station: str, arrival_station: str) -> dict
             # Add processed data to prices dict
             prices[data[0]] = data[1]
 
-        driver.quit()
-    except:
+        # driver.quit()
+    except Exception as e:
         print("ERROR: Something went wrong while scraping data...")
+        print(f"The error:\n{e}")
 
         # Close the browser
         print("INFO: Closing the browser and terminating ChromiumDriver executable...")
-        driver.quit()
+        # driver.quit()
 
         return None
     else:
         # Close the browser
         print("INFO: Closing the browser and terminating ChromiumDriver executable...")
-        driver.quit()
+        # driver.quit()
 
         return prices
 
