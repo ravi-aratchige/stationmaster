@@ -27,7 +27,7 @@ class RetrieverFactory:
         # Locate the departure station input field and enter the station name
         driver.switch_to.active_element.send_keys(departure_station + Keys.ENTER)
 
-        print("INFO: Departure station selected successfully.")
+        print("INFO: Departure station entered successfully.")
 
         # ----- ARRIVAL SELECTION -----
 
@@ -37,7 +37,7 @@ class RetrieverFactory:
         # Locate the arrival station input field and enter the station name
         driver.switch_to.active_element.send_keys(arrival_station + Keys.ENTER)
 
-        print("INFO: Arrival station selected successfully.")
+        print("INFO: Arrival station entered successfully.")
 
         # Locate the "Search" button and click it
         driver.find_element(By.CSS_SELECTOR, "button[type='submit']").click()
