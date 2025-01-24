@@ -1,0 +1,16 @@
+{
+  "messages": [
+    {
+      "content": "Hello, are there any trains from Ja-ela to Colombo Fort?",
+      "sender": "human"
+    },
+    {
+      "content": "Yes, there are multiple trains from between these two locations.",
+      "sender": "stationmaster"
+    },
+    {
+      "content": "Can you tell me the price for a ticket between these stations?",
+      "sender": "human"
+    }
+  ]
+}
