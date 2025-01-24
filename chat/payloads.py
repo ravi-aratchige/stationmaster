@@ -20,7 +20,7 @@ class ContentAndSenderMessagePayload(BaseModel):
 
 
 # Complete chat model
-class ChatPayload(BaseModel):
+class ConversationPayload(BaseModel):
     messages: List[ContentAndSenderMessagePayload]
 
 

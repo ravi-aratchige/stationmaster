@@ -5,7 +5,7 @@ from langchain.agents import AgentExecutor, create_tool_calling_agent
 from oracle.contextualizers import get_ticket_prices, get_trains_between_stations
 
 
-class ToolBoundAgentBuilder:
+class ToolCallingAgentBuilder:
     def __new__(cls):
         # Initialize model to be used by agent
         model = GroqChatModel()
