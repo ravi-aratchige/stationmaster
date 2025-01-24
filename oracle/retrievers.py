@@ -1,19 +1,20 @@
-from time import sleep
 from selenium import webdriver
 from selenium.webdriver.common.by import By
 from utils.browser import BrowserOptionsFactory
 from selenium.webdriver.common.keys import Keys
-from selenium.webdriver.common.action_chains import ActionChains
 
 
-def retrieve_all_trains(departure_station: str, arrival_station: str) -> list:
-    try:
-        # ----- INITIALIZATION -----
-
-        # Setup the webdriver
-        driver = webdriver.Chrome(
+class RetrieverFactory:
+    def __init__(self):
+        self.driver = webdriver.Chrome(
             options=BrowserOptionsFactory.get_browser_options("chrome")
         )
+
+    def _query_info_for_stations(self, departure_station: str, arrival_station: str):
+        # ----- INITIALIZATION -----
+
+        # Get webdriver from class members
+        driver = self.driver
 
         # Open website in browser
         driver.get("https://trainschedule.lk/")
@@ -41,153 +42,136 @@ def retrieve_all_trains(departure_station: str, arrival_station: str) -> list:
         # Locate the "Search" button and click it
         driver.find_element(By.CSS_SELECTOR, "button[type='submit']").click()
 
-        # ----- RESULTS -----
+    def get_all_trains(self, departure_station: str, arrival_station: str):
+        try:
+            # Get webdriver from class members
+            driver = self.driver
 
-        results_table = driver.find_element(
-            By.XPATH, "/html/body/div/main/div[1]/div[2]/div/div/table"
-        )
+            self._query_info_for_stations(
+                departure_station=departure_station, arrival_station=arrival_station
+            )
 
-        # List to store all train results
-        all_available_trains = []
+            # ----- RESULTS PAGE -----
 
-        results_table_rows = results_table.find_elements(By.TAG_NAME, "tr")
-        for row in results_table_rows:
-            # Skip past the empty rows in the table structure
-            if row.text == "":
-                continue
+            results_table = driver.find_element(
+                By.XPATH, "/html/body/div/main/div[1]/div[2]/div/div/table"
+            )
 
-            # Dict to store each train
-            train_info = {
-                "departure_time": "",
-                "arrival_time": "",
-                "time_taken": "",
-                "train_ends_at": "",
-                "train_number": "",
-                "train_type": "",
-            }
+            # List to store all train results
+            all_available_trains = []
 
-            # Select cells in each row
-            cells_of_row = row.find_elements(By.TAG_NAME, "td")
+            results_table_rows = results_table.find_elements(By.TAG_NAME, "tr")
+            for row in results_table_rows:
+                # Skip past the empty rows in the table structure
+                if row.text == "":
+                    continue
 
-            # Iterate over cells in each row
-            for cell in cells_of_row:
-                if cell == cells_of_row[0]:
-                    train_info["departure_time"] = cell.text
-                elif cell == cells_of_row[1]:
-                    train_info["arrival_time"] = cell.text
-                elif cell == cells_of_row[2]:
-                    train_info["time_taken"] = cell.text
-                elif cell == cells_of_row[3]:
-                    train_info["train_ends_at"] = cell.text
-                elif cell == cells_of_row[4]:
-                    train_info["train_number"] = cell.text
-                else:
-                    train_info["train_type"] = cell.text
+                # Dict to store each train
+                train_info = {
+                    "departure_time": "",
+                    "arrival_time": "",
+                    "time_taken": "",
+                    "train_ends_at": "",
+                    "train_number": "",
+                    "train_type": "",
+                }
 
-            print(f"Train info: {train_info}")
-            all_available_trains.append(train_info)
+                # Select cells in each row
+                cells_of_row = row.find_elements(By.TAG_NAME, "td")
 
-    except Exception as e:
-        print("ERROR: Something went wrong while scraping data...")
-        print(f"The error:\n{e}")
+                # Iterate over cells in each row
+                for cell in cells_of_row:
+                    if cell == cells_of_row[0]:
+                        train_info["departure_time"] = cell.text
+                    elif cell == cells_of_row[1]:
+                        train_info["arrival_time"] = cell.text
+                    elif cell == cells_of_row[2]:
+                        train_info["time_taken"] = cell.text
+                    elif cell == cells_of_row[3]:
+                        train_info["train_ends_at"] = cell.text
+                    elif cell == cells_of_row[4]:
+                        train_info["train_number"] = cell.text
+                    else:
+                        train_info["train_type"] = cell.text
 
-        # Close the browser
-        print("INFO: Closing the browser and terminating ChromiumDriver executable...")
-        driver.quit()
+                print(f"Train info: {train_info}")
+                all_available_trains.append(train_info)
 
-        return None
-    else:
-        # Close the browser
-        print("INFO: Closing the browser and terminating ChromiumDriver executable...")
-        driver.quit()
+        except Exception as e:
+            print("ERROR: Something went wrong while scraping data...")
+            print(f"The error:\n{e}")
 
-        return all_available_trains
+            # Close the browser
+            print("INFO: Closing the browser and stopping ChromiumDriver executable...")
+            driver.quit()
 
+            return None
 
-def retrieve_ticket_prices(departure_station: str, arrival_station: str) -> dict:
-    try:
-        # ----- INITIALIZATION -----
+        else:
+            # Close the browser
+            print("INFO: Closing the browser and stopping ChromiumDriver executable...")
+            driver.quit()
 
-        # Setup the webdriver
-        driver = webdriver.Chrome(
-            options=BrowserOptionsFactory.get_browser_options("chrome")
-        )
+            return all_available_trains
 
-        # Open website in browser
-        driver.get("https://trainschedule.lk/")
+    def get_ticket_prices(self, departure_station: str, arrival_station: str):
+        try:
+            # Get webdriver from class members
+            driver = self.driver
 
-        # ----- DEPARTURE SELECTION -----
+            self._query_info_for_stations(
+                departure_station=departure_station, arrival_station=arrival_station
+            )
 
-        # Locate the departure station input field and click it
-        driver.find_element(By.CSS_SELECTOR, "button[data-id='drStartStation']").click()
+            # ----- RESULTS PAGE -----
 
-        # Locate the departure station input field and enter the station name
-        driver.switch_to.active_element.send_keys(departure_station + Keys.ENTER)
+            # Locate table with ticket prices
+            price_table_body = driver.find_element(
+                By.XPATH, "/html/body/div/main/div[2]/div/table/tbody"
+            )
 
-        print("INFO: Departure station selected successfully.")
+            # Dict to store ticket prices
+            prices = {}
 
-        # ----- ARRIVAL SELECTION -----
+            rows_in_table = price_table_body.find_elements(By.TAG_NAME, "tr")
 
-        # Locate the arrival station input field and click it
-        driver.find_element(By.CSS_SELECTOR, "button[data-id='drEndStation']").click()
+            for row in rows_in_table:
+                # Split content in a single row into class and price
+                data = row.text.lower().split(" class rs. ")
 
-        # Locate the arrival station input field and enter the station name
-        driver.switch_to.active_element.send_keys(arrival_station + Keys.ENTER)
+                # NOTE
+                # e.g. "2nd Class Rs. 150.00" is split into a list as ["2nd", "150.00"]
 
-        print("INFO: Arrival station selected successfully.")
+                # Change class in list into camel case string
+                if data[0] == "1st":
+                    data[0] = "first_class"
+                elif data[0] == "2nd":
+                    data[0] = "second_class"
+                elif data[0] == "3rd":
+                    data[0] = "third_class"
 
-        # Locate the "Search" button and click it
-        driver.find_element(By.CSS_SELECTOR, "button[type='submit']").click()
+                # Convert string ticket price into float
+                data[1] = float(data[1])
 
-        # ----- RESULTS -----
+                # Add processed data to prices dict
+                prices[data[0]] = data[1]
 
-        # Locate table with ticket prices
-        price_table_body = driver.find_element(
-            By.XPATH, "/html/body/div/main/div[2]/div/table/tbody"
-        )
+        except Exception as e:
+            print("ERROR: Something went wrong while scraping data...")
+            print(f"The error:\n{e}")
 
-        # Dict to store ticket prices
-        prices = {}
+            # Close the browser
+            print("INFO: Closing the browser and stopping ChromiumDriver executable...")
+            driver.quit()
 
-        rows_in_table = price_table_body.find_elements(By.TAG_NAME, "tr")
+            return None
 
-        for row in rows_in_table:
-            # Split content in a single row into class and price
-            data = row.text.lower().split(" class rs. ")
+        else:
+            # Close the browser
+            print("INFO: Closing the browser and stopping ChromiumDriver executable...")
+            driver.quit()
 
-            # NOTE
-            # e.g. "2nd Class Rs. 150.00" is split into a list as ["2nd", "150.00"]
-
-            # Change class in list into camel case string
-            if data[0] == "1st":
-                data[0] = "first_class"
-            elif data[0] == "2nd":
-                data[0] = "second_class"
-            elif data[0] == "3rd":
-                data[0] = "third_class"
-
-            # Convert string ticket price into float
-            data[1] = float(data[1])
-
-            # Add processed data to prices dict
-            prices[data[0]] = data[1]
-
-        # driver.quit()
-    except Exception as e:
-        print("ERROR: Something went wrong while scraping data...")
-        print(f"The error:\n{e}")
-
-        # Close the browser
-        print("INFO: Closing the browser and terminating ChromiumDriver executable...")
-        # driver.quit()
-
-        return None
-    else:
-        # Close the browser
-        print("INFO: Closing the browser and terminating ChromiumDriver executable...")
-        # driver.quit()
-
-        return prices
+            return prices
 
 
 # Make module safely exportable

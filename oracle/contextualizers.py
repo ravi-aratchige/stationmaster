@@ -1,5 +1,5 @@
-from oracle.retrievers import retrieve_all_trains, retrieve_ticket_prices
 from langchain_core.tools import tool
+from oracle.retrievers import RetrieverFactory
 
 
 @tool
@@ -17,9 +17,13 @@ def get_trains_between_stations(departure_station: str, arrival_station: str) ->
     # String to return to LLM with train information
     train_information = f"The following trains are available from {departure_station} to {arrival_station}:\n\n"
 
+    # Setup retriever
+    retriever = RetrieverFactory()
+
     # Fetch train information from retriever
-    trains = retrieve_all_trains(
-        departure_station=departure_station, arrival_station=arrival_station
+    trains = retriever.get_all_trains(
+        departure_station=departure_station,
+        arrival_station=arrival_station,
     )
 
     if trains == None:
@@ -55,9 +59,13 @@ def get_ticket_prices(departure_station: str, arrival_station: str) -> str:
     # String to return to LLM with ticket information
     ticket_price_information = f"Here are the ticket prices for trains from {departure_station} to {arrival_station}:\n\n"
 
-    # Fetch ticket price information from retriever
-    ticket_prices = retrieve_ticket_prices(
-        departure_station=departure_station, arrival_station=arrival_station
+    # Setup retriever
+    retriever = RetrieverFactory()
+
+    # Fetch train information from retriever
+    ticket_prices = retriever.get_ticket_prices(
+        departure_station=departure_station,
+        arrival_station=arrival_station,
     )
 
     if ticket_prices == None:

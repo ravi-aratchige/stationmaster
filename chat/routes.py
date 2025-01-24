@@ -4,7 +4,7 @@ from langchain_core.messages import HumanMessage
 from langchain_core.messages import AIMessage
 from chat.payloads import ChatPayload, ContentOnlyMessagePayload, MessageAuthor
 from chat.agents import ToolBoundAgentBuilder
-from oracle.retrievers import retrieve_ticket_prices
+from oracle.retrievers import RetrieverFactory
 
 # Setup chatbot router
 router = APIRouter(
@@ -64,11 +64,12 @@ def get_response_from_chatbot(input: ContentOnlyMessagePayload):
 
 
 # Test retrievers as required
-@router.get("/test-retriever/")
+@router.get("/test-retriever/", tags=["Debug"])
 def test_retriever():
     departure_station = "Ja-ela"
     arrival_station = "Colombo Fort"
-    output = retrieve_ticket_prices(departure_station, arrival_station)
+    retriever = RetrieverFactory()
+    output = retriever.get_ticket_prices(departure_station, arrival_station)
     return {
         "data": output,
     }
