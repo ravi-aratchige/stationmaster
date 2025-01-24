@@ -20,7 +20,7 @@ Politely refuse to answer questions that are not related to information about ra
 """
 
 
-class ToolBoundAgentPromptTemplate:
+class ToolCallingAgentPromptTemplate:
     def __new__(cls):
         prompt = ChatPromptTemplate.from_messages(
             [
