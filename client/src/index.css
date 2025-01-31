@@ -1,0 +1,5 @@
+@import "tailwindcss";
+
+@theme {  --color-old-paper: #f5f5dc; }
+
+@theme {  --font-old-font: "Times New Roman", "sans-serif"; }
