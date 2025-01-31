@@ -57,7 +57,9 @@ def get_ticket_prices(departure_station: str, arrival_station: str) -> str:
     """
 
     # String to return to LLM with ticket information
-    ticket_price_information = f"Here are the ticket prices for trains from {departure_station} to {arrival_station}:\n\n"
+    ticket_price_information = (
+        f"Ticket prices for trains from {departure_station} to {arrival_station}:\n\n"
+    )
 
     # Setup retriever
     retriever = RetrieverFactory()

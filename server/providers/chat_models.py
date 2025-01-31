@@ -5,11 +5,16 @@ import os
 from dotenv import load_dotenv
 from langchain_groq import ChatGroq
 
+MODEL_NAME = "llama-3.3-70b-specdec"
+# NOTE
+# "mixtral-8x7b-32768" was used previously.
+# This model is unable to invoke tools when the conversation has multiple messages.
+
 
 class GroqChatModel:
     """Generate a single instance of Groq's chat model."""
 
-    def __new__(cls, temperature=0.5, model="mixtral-8x7b-32768"):
+    def __new__(cls, temperature=0.5, model=MODEL_NAME):
         """Create and return a single instance of Groq's chat model.
 
         Args:
@@ -36,7 +41,7 @@ class GroqChatModel:
 class GroqChatModelConnection:
     """Generate a connection to access Groq's chat model."""
 
-    def __init__(self, temperature=0.5, model="mixtral-8x7b-32768"):
+    def __init__(self, temperature=0.5, model=MODEL_NAME):
         """Constructor to initialize connection to Groq's chat model.
 
         Args:

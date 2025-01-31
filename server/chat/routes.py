@@ -101,15 +101,19 @@ def test_retriever():
     }
 
 
-# Get chat history
-@router.post("/test-chat-history/")
-def get_chat_history(chat: ConversationPayload):
+# Get StationMaster's response
+@router.post("/get-stationmaster-response/")
+def get_stationmaster_response(chat: ConversationPayload):
+    # Set start time (for measuring execution time)
+    start_time = time.time()
+
     # Instatiate empty list to store chat history
     # in a format the agent can understand
     chat_history = []
 
     # Iterate through messages in chat (except last message)
     for message in chat.messages[:-1]:
+        # Format message using relevant Message classes from LangChain
         if message.sender == MessageAuthor.HUMAN:
             formatted_msg = HumanMessage(content=message.content)
         elif message.sender == MessageAuthor.STATIONMASTER:
@@ -131,8 +135,13 @@ def get_chat_history(chat: ConversationPayload):
         }
     )
 
+    # Measure execution time
+    execution_time = time.time() - start_time
+    print(f"Execution time: {execution_time} seconds")
+
     return {
         "data": response,
+        "time": round(execution_time),
     }
 
 

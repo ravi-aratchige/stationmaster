@@ -6,11 +6,22 @@ from selenium.webdriver.common.keys import Keys
 
 class RetrieverFactory:
     def __init__(self):
+        # Initialize webdriver with relevant options
         self.driver = webdriver.Chrome(
             options=BrowserOptionsFactory.get_browser_options("chrome")
         )
 
     def _query_info_for_stations(self, departure_station: str, arrival_station: str):
+        """Private method to query information based on departure and arrival stations.
+
+        This method is used by other public methods that read information
+        from the results page of the website.
+
+        Args:
+            departure_station (str): The name of the departure station
+            arrival_station (str): The name of the arrival station
+        """
+
         # ----- INITIALIZATION -----
 
         # Get webdriver from class members
@@ -44,16 +55,14 @@ class RetrieverFactory:
 
     def get_all_trains(self, departure_station: str, arrival_station: str):
         try:
-            # Get webdriver from class members
-            driver = self.driver
-
+            # Query information using private retriever method
             self._query_info_for_stations(
                 departure_station=departure_station, arrival_station=arrival_station
             )
 
             # ----- RESULTS PAGE -----
 
-            results_table = driver.find_element(
+            results_table = self.driver.find_element(
                 By.XPATH, "/html/body/div/main/div[1]/div[2]/div/div/table"
             )
 
@@ -103,22 +112,20 @@ class RetrieverFactory:
 
             # Close the browser
             print("INFO: Closing the browser and stopping ChromiumDriver executable...")
-            driver.quit()
+            self.driver.quit()
 
             return None
 
         else:
             # Close the browser
             print("INFO: Closing the browser and stopping ChromiumDriver executable...")
-            driver.quit()
+            self.driver.quit()
 
             return all_available_trains
 
     def get_ticket_prices(self, departure_station: str, arrival_station: str):
         try:
-            # Get webdriver from class members
-            driver = self.driver
-
+            # Query information using private retriever method
             self._query_info_for_stations(
                 departure_station=departure_station, arrival_station=arrival_station
             )
@@ -126,7 +133,7 @@ class RetrieverFactory:
             # ----- RESULTS PAGE -----
 
             # Locate table with ticket prices
-            price_table_body = driver.find_element(
+            price_table_body = self.driver.find_element(
                 By.XPATH, "/html/body/div/main/div[2]/div/table/tbody"
             )
 
@@ -162,14 +169,14 @@ class RetrieverFactory:
 
             # Close the browser
             print("INFO: Closing the browser and stopping ChromiumDriver executable...")
-            driver.quit()
+            self.driver.quit()
 
             return None
 
         else:
             # Close the browser
             print("INFO: Closing the browser and stopping ChromiumDriver executable...")
-            driver.quit()
+            self.driver.quit()
 
             return prices
 

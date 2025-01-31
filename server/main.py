@@ -4,7 +4,7 @@ from chat.routes import router as chat_router
 from fastapi.middleware.cors import CORSMiddleware
 
 # Set LangChain runtime configurations
-langchain.debug = False
+langchain.debug = True
 
 # Instantiate FastAPI application
 app = FastAPI(
